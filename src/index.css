@@ -1,0 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Figtree:wght@400;600&display=swap');
+@import 'tailwindcss';
+
+@font-face { font-family: 'Inter:Light'; src: local('Inter Light'), local('Inter'); font-weight: 300; }
+@font-face { font-family: 'Inter:Regular'; src: local('Inter Regular'), local('Inter'); font-weight: 400; }
+@font-face { font-family: 'Inter:Medium'; src: local('Inter Medium'), local('Inter'); font-weight: 500; }
+@font-face { font-family: 'Inter:Semi_Bold'; src: local('Inter SemiBold'), local('Inter'); font-weight: 600; }
+@font-face { font-family: 'Inter:Bold'; src: local('Inter Bold'), local('Inter'); font-weight: 700; }
+@font-face { font-family: 'Figtree:Regular'; src: local('Figtree Regular'), local('Figtree'); font-weight: 400; }
+@font-face { font-family: 'Figtree:SemiBold'; src: local('Figtree SemiBold'), local('Figtree'); font-weight: 600; }
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }

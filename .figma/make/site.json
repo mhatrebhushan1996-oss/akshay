@@ -1,0 +1,10 @@
+{
+  "description": "Create stunning designs effortlessly with intuitive tools tailored for designers and creatives, enhancing productivity and collaboration.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
