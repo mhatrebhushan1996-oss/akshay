@@ -14,5 +14,106 @@
   to { transform: translateX(-50%); }
 }
 
+@keyframes process-line-progress {
+  from { height: 0; }
+  to { height: 100%; }
+}
+
+.process-line-progress {
+  height: 0;
+  animation: process-line-progress 10s linear forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .process-line-progress { animation-timing-function: steps(5, end); }
+}
+
+.reveal-btn {
+  -webkit-tap-highlight-color: transparent;
+  appearance: none;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: inline-grid;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.5;
+  min-width: 9.5rem;
+  overflow: hidden;
+  padding: 1rem 2rem;
+  place-content: center;
+  position: relative;
+  white-space: nowrap;
+}
+
+.reveal-btn--compact {
+  font-size: 0.875rem;
+  min-width: 7.75rem;
+  padding: 0.72rem 1.25rem;
+}
+
+.reveal-btn--orange {
+  background: #0f1e30;
+  border-color: #ff4d00;
+  color: #fff;
+}
+
+.reveal-btn--light {
+  background: #ff4d00;
+  border-color: rgba(255, 255, 255, 0.8);
+  color: #fff;
+}
+
+.reveal-btn__original {
+  background: #ff4d00;
+  color: #fff;
+  display: grid;
+  inset: 0;
+  place-content: center;
+  position: absolute;
+  transition: transform 0.35s cubic-bezier(0.87, 0, 0.13, 1);
+}
+
+.reveal-btn--light .reveal-btn__original {
+  background: #fff;
+  color: #0f1e30;
+}
+
+.reveal-btn__letters {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(-8px);
+  transition: transform 0.28s ease, opacity 0.28s ease;
+}
+
+.reveal-btn:hover .reveal-btn__original,
+.reveal-btn:focus-visible .reveal-btn__original {
+  transform: translateY(100%);
+}
+
+.reveal-btn:hover .reveal-btn__letters,
+.reveal-btn:focus-visible .reveal-btn__letters {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-btn:focus-visible {
+  outline: 3px solid rgba(74, 144, 217, 0.55);
+  outline-offset: 3px;
+}
+
+.reveal-btn:active {
+  transform: scale(0.97);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-btn__original,
+  .reveal-btn__letters {
+    transition-duration: 0.01ms;
+  }
+}
+
 .scrollbar-hide::-webkit-scrollbar { display: none; }
 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }

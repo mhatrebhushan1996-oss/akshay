@@ -1,33 +1,97 @@
 import { useState, useEffect, useRef } from "react";
 
 import imgVideo from "../imports/0cb14c6e231a2dbda03b4bfc9a9ba5feafe896ea.png";
-import imgMontrealLine from "../imports/37e5e1636a7dc6b5b4e3d39b132d8cd94103f00a.png";
-import imgProcess1 from "../imports/af7e83a41f34747b1027c252e666145c786fcdac.png";
-import imgProcess2 from "../imports/bdcf7125c185c9b1e8955a8775d9feb612ce356c.png";
-import imgProcess3 from "../imports/a46424e92dcc4159900a5da96ba368db432cf792.png";
-import imgProcess4 from "../imports/1875a18b710b3b61b97d86f6250dfab374417946.png";
-import imgRCC from "./imports/full-shot-people-learning-language.jpg";
-import imgSteel from "../imports/b8210939dcd3db50ec6c1260d69ee812933a7bbe.png";
-import imgAudit from "../imports/0f9db395486ff2a99be32c814511700a4843e46a.png";
-import imgValuation from "../imports/788659de0a15c2e1b9703d0b7eb3f6dbdad5eeb8.png";
-import imgRetrofit from "../imports/c8f43005b54b07479181409c5d6f90606c3daeaf.png";
-import imgBOQ from "../imports/6e92b631f87e6de5f9a9cd840258230e753f6284.png";
-import imgProject1 from "../imports/58419233a2f1fc9a0672901d502746b29d18313c.png";
-import imgProject2 from "../imports/ec0e71f510e4c6626e03331ed14fee76076fb320.png";
-import imgProject3 from "../imports/02e0d7b8ca05321b86e5c69e02aeedd7d9d97d4b.png";
-import imgProject4 from "../imports/cf645c6dcc61ea039ec9fca360208c22aff35817.png";
-import imgProject5 from "../imports/40ade2b2d5502a548052586ac779b32099e9b3ed.png";
+import heroVideo from "../imports/hero-oculus.mp4";
+import imgMontrealLine from "../imports/montrealline-1.png";
+import imgProcess1 from "../imports/process-step-1.png";
+import imgProcess2 from "../imports/process-step-2.png";
+import imgProcess3 from "../imports/process-step-3.png";
+import imgProcess4 from "../imports/process-step-4.png";
+import imgRCC from "../imports/service-rcc-design.png";
+import imgSteel from "../imports/service-steel-design.png";
+import imgAudit from "../imports/service-structural-audit.png";
+import imgValuation from "../imports/service-property-valuation.png";
+import imgRetrofit from "../imports/service-repair-retrofitting.png";
+import imgBOQ from "../imports/service-boq.png";
+import imgProject1 from "../imports/project-admin-building.png";
+import imgProject2 from "../imports/project-dianing-building.png";
+import imgProject3 from "../imports/project-food-mall-building.png";
+import imgProject4 from "../imports/project-hotel-complex-building.png";
+import imgProject5 from "../imports/project-g7-residental-building.png";
+import imgClientAdani from "../imports/client-adani-transparent.png";
+import imgClientReliance from "../imports/client-reliance.png";
+import imgClientDlf from "../imports/client-dlf.png";
+import imgClientBrookfield from "../imports/client-brookfield.png";
+import imgClientGodrej from "../imports/client-godrej.png";
+import imgClientPiramal from "../imports/client-piramal.png";
+import imgStructeasyLogo from "../imports/structeasy-logo.png";
 
 const scrollTo = (id: string) =>
   document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
 
+function BrandLogo({ className = "" }: { className?: string }) {
+  return (
+    <span className={`relative block aspect-[454/58] overflow-hidden ${className}`}>
+      <img
+        src={imgStructeasyLogo}
+        alt="Structeasy"
+        className="absolute left-[-7.71%] top-[-74.14%] w-[114.32%] max-w-none"
+      />
+    </span>
+  );
+}
+
+type RevealButtonProps = {
+  label: string;
+  onClick?: () => void;
+  type?: "button" | "submit";
+  variant?: "light" | "orange";
+  compact?: boolean;
+  className?: string;
+};
+
+function RevealButton({
+  label,
+  onClick,
+  type = "button",
+  variant = "orange",
+  compact = false,
+  className = "",
+}: RevealButtonProps) {
+  return (
+    <button
+      type={type}
+      onClick={onClick}
+      aria-label={label}
+      className={`reveal-btn reveal-btn--${variant} ${compact ? "reveal-btn--compact" : ""} ${className}`}
+    >
+      <span className="reveal-btn__original">{label}</span>
+      <span className="reveal-btn__letters" aria-hidden="true">{label}</span>
+    </button>
+  );
+}
+
 // ─── NAVBAR ────────────────────────────────────────────────────────────────
 function Navbar() {
   const [scrolled, setScrolled] = useState(false);
+  const [navVisible, setNavVisible] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
+  const lastScrollYRef = useRef(0);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
+    const onScroll = () => {
+      const currentScrollY = window.scrollY;
+      setScrolled(currentScrollY > 40);
+
+      if (currentScrollY < 80 || currentScrollY < lastScrollYRef.current - 4) {
+        setNavVisible(true);
+      } else if (currentScrollY > lastScrollYRef.current + 4) {
+        setNavVisible(false);
+        setMenuOpen(false);
+      }
+
+      lastScrollYRef.current = currentScrollY;
+    };
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
@@ -39,7 +103,11 @@ function Navbar() {
   ];
 
   return (
-    <nav className="fixed top-[30px] left-1/2 -translate-x-1/2 z-50 w-[min(1170px,calc(100%-40px))]">
+    <nav
+      className={`fixed top-[30px] left-1/2 -translate-x-1/2 z-50 w-[min(1170px,calc(100%-40px))] transition-[transform,opacity] duration-300 ease-out ${
+        navVisible ? "translate-y-0 opacity-100" : "-translate-y-24 opacity-0 pointer-events-none"
+      }`}
+    >
       <div
         className={`flex items-center justify-between pl-4 pr-2 h-[54px] rounded-[56px] border border-white/50 backdrop-blur-[14px] transition-colors duration-300 ${
           scrolled ? "bg-[#0f1e30]/85" : "bg-white/10"
@@ -48,22 +116,10 @@ function Navbar() {
         {/* Logo */}
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="flex items-center gap-2.5 shrink-0"
+          className="flex shrink-0 items-center"
+          aria-label="Structeasy — back to top"
         >
-          <div className="bg-[#4a90d9] size-8 rounded-[6px] flex items-center justify-center">
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-              <path
-                d="M4.5 16.5V3C4.5 2.17 5.17 1.5 6 1.5h6c.83 0 1.5.67 1.5 1.5v13.5H4.5Z"
-                stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
-              />
-              <path d="M1.5 16.5h15" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
-              <path d="M7.5 4.5h3M7.5 7.5h3M7.5 10.5h3M7.5 13.5h3" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
-            </svg>
-          </div>
-          <div className="text-left">
-            <p className="text-white font-semibold text-[15px] tracking-[-0.375px] leading-[1.5]">STRUCTURA</p>
-            <p className="text-[#4a90d9] text-[10px] tracking-[2px] uppercase leading-none">Engineering</p>
-          </div>
+          <BrandLogo className="w-[132px] sm:w-[150px]" />
         </button>
 
         {/* Desktop links */}
@@ -79,12 +135,12 @@ function Navbar() {
               </button>
             ))}
           </div>
-          <button
+          <RevealButton
+            label="Contact Us"
             onClick={() => scrollTo("contact")}
-            className="bg-white text-[#0f1e30] font-semibold text-[14px] px-4 py-3 rounded-[40px] hover:bg-[#ff4d00] hover:text-white transition-colors"
-          >
-            Contact Us
-          </button>
+            variant="light"
+            compact
+          />
         </div>
 
         {/* Mobile hamburger */}
@@ -115,12 +171,12 @@ function Navbar() {
               {label}
             </button>
           ))}
-          <button
+          <RevealButton
+            label="Contact Us"
             onClick={() => { scrollTo("contact"); setMenuOpen(false); }}
-            className="bg-[#ff4d00] text-white font-semibold text-[14px] px-4 py-3 rounded-[40px] text-center"
-          >
-            Contact Us
-          </button>
+            compact
+            className="w-full"
+          />
         </div>
       )}
     </nav>
@@ -130,52 +186,30 @@ function Navbar() {
 // ─── HERO ──────────────────────────────────────────────────────────────────
 function HeroSection() {
   return (
-    <section id="hero" className="relative min-h-[600px] sm:min-h-[730px] overflow-hidden">
-      <img src={imgVideo} alt="" className="absolute inset-0 size-full object-cover" />
-      <div
-        className="absolute inset-0"
-        style={{
-          backgroundImage:
-            "linear-gradient(0deg,rgba(0,0,0,.4) 0%,rgba(102,102,102,.4) 100%),linear-gradient(90deg,rgba(0,0,0,.6) 0%,rgba(0,0,0,.6) 100%)",
-        }}
+    <section id="hero" className="relative min-h-[640px] overflow-hidden bg-[#0f1e30] sm:min-h-[730px]">
+      <video
+        src={heroVideo}
+        poster={imgVideo}
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="metadata"
+        aria-hidden="true"
+        className="absolute inset-0 size-full object-cover object-center"
       />
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,18,28,.58)_0%,rgba(8,18,28,.64)_100%)]" />
+      <div className="absolute inset-0 bg-black/15" />
 
-      <div className="relative z-10 min-h-[600px] sm:min-h-[730px] flex flex-col items-center justify-end gap-8 sm:gap-10 pb-16 sm:pb-20 px-4">
-        {/* Headline */}
-        <div className="flex flex-col items-center gap-4 sm:gap-5 w-full">
-          <div className="flex flex-row items-center gap-[10px] sm:gap-[18px]">
-            {["Define", "Design", "Deliver"].map((word, i) => (
-              <div
-                key={word}
-                className={`flex items-center justify-center h-10 sm:h-14 px-1.5 sm:px-2.5 sm:pr-5 ${
-                  i < 2 ? "border-r-2 border-white pr-3 sm:pr-5" : ""
-                }`}
-              >
-                <span className="text-[clamp(22px,5.5vw,64px)] font-bold text-white tracking-[-0.5px] sm:tracking-[-1px] leading-none">
-                  {word}
-                </span>
-              </div>
-            ))}
-          </div>
-          <p className="text-[clamp(15px,2vw,22px)] text-white/95 font-['Figtree',sans-serif] text-center max-w-[790px] leading-[1.6]">
-            Expert structural solutions for complex buildings and infrastructure. We transform architectural vision into enduring reality.
-          </p>
-        </div>
-
-        {/* CTAs */}
-        <div className="flex flex-row gap-3 sm:gap-6 items-center">
-          <button
-            onClick={() => scrollTo("services")}
-            className="bg-[#ff4d00] text-white font-semibold text-[14px] sm:text-[18px] px-5 sm:px-8 py-3 sm:py-4 rounded-[48px] hover:bg-[#e54400] active:scale-95 transition-all whitespace-nowrap"
-          >
-            Our Services
-          </button>
-          <button
-            onClick={() => scrollTo("contact")}
-            className="border border-white text-white font-semibold text-[14px] sm:text-[18px] px-5 sm:px-8 py-3 sm:py-4 rounded-[48px] hover:bg-white/10 active:scale-95 transition-all whitespace-nowrap"
-          >
-            Consult With Us
-          </button>
+      <div className="relative z-10 flex min-h-[640px] items-end justify-center px-5 pb-14 sm:min-h-[730px] sm:px-8 sm:pb-20">
+        <div className="flex w-full max-w-[1000px] flex-col items-center text-center">
+          <h1 className="flex items-center justify-center text-[clamp(34px,5.2vw,64px)] font-bold leading-none tracking-[-0.035em] text-white">
+            <span className="px-2.5 sm:px-5">Define</span>
+            <span className="h-[0.82em] w-px bg-white/80" aria-hidden="true" />
+            <span className="px-2.5 sm:px-5">Design</span>
+            <span className="h-[0.82em] w-px bg-white/80" aria-hidden="true" />
+            <span className="px-2.5 sm:px-5">Deliver</span>
+          </h1>
         </div>
       </div>
     </section>
@@ -183,19 +217,47 @@ function HeroSection() {
 }
 
 // ─── LOGO STRIP ────────────────────────────────────────────────────────────
-const PARTNERS = ["JEEP", "HONDA", "TATA PROJECTS", "GODREJ", "L&T", "PRESTIGE", "BRIGADE", "SOBHA", "DLF", "SHAPOORJI"];
+const CLIENT_LOGOS = [
+  { name: "Adani", img: imgClientAdani },
+  { name: "Reliance Industries Limited", img: imgClientReliance },
+  { name: "DLF", img: imgClientDlf },
+  { name: "Brookfield Properties", img: imgClientBrookfield },
+  { name: "Godrej Properties", img: imgClientGodrej },
+  { name: "Piramal Realty", img: imgClientPiramal },
+];
 
 function LogoStrip() {
+  const logoSequence = Array.from(
+    { length: 6 },
+    (_, i) => CLIENT_LOGOS[i % CLIENT_LOGOS.length],
+  );
+
   return (
-    <div className="bg-[#0f1e30] h-[100px] sm:h-[150px] overflow-hidden flex items-center">
+    <div className="bg-[#ecf5ff] h-[110px] sm:h-[150px] overflow-hidden flex items-center">
       <div
-        className="flex gap-10 sm:gap-16 items-center whitespace-nowrap"
+        className="flex items-center whitespace-nowrap"
         style={{ animation: "marquee 28s linear infinite", width: "max-content" }}
       >
-        {[...PARTNERS, ...PARTNERS].map((name, i) => (
-          <span key={i} className="text-white/30 font-bold text-[14px] sm:text-[20px] tracking-[3px] sm:tracking-[4px] uppercase shrink-0 px-3 sm:px-4">
-            {name}
-          </span>
+        {[0, 1].map((group) => (
+          <div
+            key={group}
+            className="flex shrink-0 items-center gap-10 pr-10 sm:gap-14 sm:pr-14"
+            aria-hidden={group === 1}
+          >
+            {logoSequence.map((client, i) => (
+              <div
+                key={`${group}-${i}`}
+                className="flex h-24 w-56 shrink-0 items-center justify-center px-2 sm:h-32 sm:w-72 sm:px-3"
+              >
+                <img
+                  src={client.img}
+                  alt={group === 0 ? client.name : ""}
+                  className="max-h-20 w-full object-contain sm:max-h-24"
+                  draggable={false}
+                />
+              </div>
+            ))}
+          </div>
         ))}
       </div>
     </div>
@@ -207,7 +269,11 @@ function AboutSection() {
   return (
     <section id="about" className="bg-white py-16 sm:py-24 lg:py-32 relative overflow-hidden">
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-[667px] opacity-50 pointer-events-none">
-        <img src={imgMontrealLine} alt="" className="w-full h-full object-cover object-top" />
+        <img
+          src={imgMontrealLine}
+          alt=""
+          className="size-full object-cover object-bottom sm:object-contain"
+        />
       </div>
       <div className="relative z-10 flex flex-col items-center gap-14 px-8 text-center border-0 border-transparent">
         <div className="max-w-[1090px]">
@@ -216,12 +282,10 @@ function AboutSection() {
             Engineering strength. Delivering confidence. We partner with architects and developers to turn complex ideas into stable, buildable realities.
           </p>
         </div>
-        <button
+        <RevealButton
+          label="Know more"
           onClick={() => scrollTo("services")}
-          className="border border-white bg-white text-[#303030] font-semibold text-[18px] px-8 py-4 rounded-[48px] hover:bg-white/90 active:scale-95 transition-all"
-        >
-          Know more
-        </button>
+        />
       </div>
     </section>
   );
@@ -247,8 +311,8 @@ function BentoCard({ img, title }: { img: string; title: string }) {
         className="absolute inset-0 size-full object-cover transition-transform duration-500 group-hover:scale-105"
         draggable={false}
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/70 rounded-[12px]" />
-      <p className="absolute bottom-5 left-5 right-5 text-white font-semibold text-[16px] sm:text-[18px] leading-snug">
+      <div className="absolute inset-0 rounded-[12px] bg-gradient-to-b from-transparent via-transparent to-black" />
+      <p className="absolute bottom-4 left-4 right-4 text-[15px] font-semibold leading-[1.2] text-white sm:bottom-5 sm:left-5 sm:right-5 sm:text-[18px]">
         {title}
       </p>
     </div>
@@ -341,7 +405,10 @@ function ServiceSwipeStack() {
                 ? { onPointerDown, onPointerMove, onPointerUp, onPointerCancel: onPointerUp }
                 : {})}
             >
-              <BentoCard img={ALL_SERVICES[cardIdx].img} title={ALL_SERVICES[cardIdx].title} />
+              <BentoCard
+                img={ALL_SERVICES[cardIdx].img}
+                title={ALL_SERVICES[cardIdx].title}
+              />
               {/* Swipe hint arrows on top card */}
               {isTop && !flying && Math.abs(dragX) < 10 && (
                 <div className="absolute inset-x-0 bottom-14 flex justify-between px-5 pointer-events-none opacity-50">
@@ -406,31 +473,26 @@ function ServicesSection() {
         <ServiceSwipeStack />
       </div>
 
-      {/* ── Tablet+: bento grid ── */}
+      {/* ── Tablet+: reference-style bento grid ── */}
       <div
-        className="hidden sm:grid gap-4 lg:gap-5"
-        style={{
-          gridTemplateColumns: "repeat(3, 1fr)",
-          gridTemplateRows: "220px 220px 220px",
-        }}
+        className="hidden grid-cols-[minmax(0,1fr)_minmax(0,2fr)] gap-4 sm:grid lg:gap-5"
+        style={{ aspectRatio: "2.15 / 1" }}
       >
-        <div style={{ gridColumn: "1 / 3", gridRow: "1 / 3" }}>
+        <div className="min-h-0 min-w-0">
           <BentoCard img={imgRCC} title="RCC Design" />
         </div>
-        <div style={{ gridColumn: "3", gridRow: "1" }}>
-          <BentoCard img={imgSteel} title="Steel Design" />
-        </div>
-        <div style={{ gridColumn: "3", gridRow: "2" }}>
-          <BentoCard img={imgAudit} title="Structural Audit" />
-        </div>
-        <div style={{ gridColumn: "1", gridRow: "3" }}>
-          <BentoCard img={imgValuation} title="Property Valuation" />
-        </div>
-        <div style={{ gridColumn: "2", gridRow: "3" }}>
-          <BentoCard img={imgRetrofit} title="Repair and Retrofitting" />
-        </div>
-        <div style={{ gridColumn: "3", gridRow: "3" }}>
-          <BentoCard img={imgBOQ} title="Bill Of Quantities (BOQ)" />
+
+        <div className="grid min-w-0 grid-rows-2 gap-4 lg:gap-5">
+          <div className="grid min-h-0 grid-cols-2 gap-4 lg:gap-5">
+            <BentoCard img={imgSteel} title="Steel Design" />
+            <BentoCard img={imgAudit} title="Structural Audit" />
+          </div>
+
+          <div className="grid min-h-0 grid-cols-3 gap-4 lg:gap-5">
+            <BentoCard img={imgValuation} title="Property Valuation" />
+            <BentoCard img={imgRetrofit} title="Repair and Retrofitting" />
+            <BentoCard img={imgBOQ} title="Bill Of Quantities (BOQ)" />
+          </div>
         </div>
       </div>
     </section>
@@ -439,11 +501,11 @@ function ServicesSection() {
 
 // ─── PROJECTS ──────────────────────────────────────────────────────────────
 const PROJECTS = [
-  { title: "Commercial Tower", img: imgProject1 },
-  { title: "Steel Bridge", img: imgProject2 },
-  { title: "Residential Complex", img: imgProject3 },
-  { title: "Industrial Hub", img: imgProject4 },
-  { title: "Infrastructure", img: imgProject5 },
+  { title: "Admin Building", img: imgProject1 },
+  { title: "Dianing Building", img: imgProject2 },
+  { title: "Food Mall Building", img: imgProject3 },
+  { title: "Hotel Complex Building", img: imgProject4 },
+  { title: "G+6 Residental Building", img: imgProject5 },
 ];
 
 function ProjectsSection() {
@@ -451,12 +513,14 @@ function ProjectsSection() {
   const firstCardRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef<number>(0);
   const posRef = useRef(0);
-  const pausedRef = useRef(false);
+  const hoverPausedRef = useRef(false);
+  const navigationPausedRef = useRef(false);
+  const navigationTimerRef = useRef<number | null>(null);
   const dragRef = useRef({ active: false, startX: 0, startPos: 0 });
   const setWRef = useRef(0);
 
   const CARD_GAP = 16;
-  const SPEED = 0.6;
+  const SPEED = 1.2;
 
   // Measure actual rendered card width (responsive) so seamless loop is accurate
   useEffect(() => {
@@ -474,7 +538,7 @@ function ProjectsSection() {
 
   useEffect(() => {
     const tick = () => {
-      if (!pausedRef.current && !dragRef.current.active && trackRef.current && setWRef.current > 0) {
+      if (!hoverPausedRef.current && !navigationPausedRef.current && !dragRef.current.active && trackRef.current && setWRef.current > 0) {
         posRef.current += SPEED;
         if (posRef.current >= setWRef.current) posRef.current -= setWRef.current;
         trackRef.current.style.transform = `translateX(${-posRef.current}px)`;
@@ -484,6 +548,47 @@ function ProjectsSection() {
     rafRef.current = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(rafRef.current);
   }, []);
+
+  useEffect(() => {
+    return () => {
+      if (navigationTimerRef.current !== null) window.clearTimeout(navigationTimerRef.current);
+    };
+  }, []);
+
+  const moveByCard = (direction: -1 | 1) => {
+    const track = trackRef.current;
+    const firstCard = firstCardRef.current;
+    const setWidth = setWRef.current;
+    if (!track || !firstCard || setWidth <= 0) return;
+
+    if (navigationTimerRef.current !== null) window.clearTimeout(navigationTimerRef.current);
+    navigationPausedRef.current = true;
+
+    const cardStep = firstCard.offsetWidth + CARD_GAP;
+    let start = posRef.current;
+
+    if (direction === -1 && start < cardStep) {
+      start += setWidth;
+      posRef.current = start;
+      track.style.transition = "none";
+      track.style.transform = `translateX(${-start}px)`;
+      track.getBoundingClientRect();
+    }
+
+    const target = start + direction * cardStep;
+    posRef.current = target;
+    track.style.transition = "transform 0.6s cubic-bezier(0.22, 1, 0.36, 1)";
+    track.style.transform = `translateX(${-target}px)`;
+
+    navigationTimerRef.current = window.setTimeout(() => {
+      const normalized = ((posRef.current % setWidth) + setWidth) % setWidth;
+      posRef.current = normalized;
+      track.style.transition = "none";
+      track.style.transform = `translateX(${-normalized}px)`;
+      navigationPausedRef.current = false;
+      navigationTimerRef.current = null;
+    }, 620);
+  };
 
   const onPointerDown = (e: React.PointerEvent) => {
     dragRef.current = { active: true, startX: e.clientX, startPos: posRef.current };
@@ -511,16 +616,35 @@ function ProjectsSection() {
             Structures That <span className="text-[#4a90d9]">Define Skylines</span>
           </h2>
         </div>
-        <button className="text-[#ff4d00] font-semibold text-[16px] hover:underline transition-all self-start sm:self-auto">
-          View all
-        </button>
+        <div className="flex items-center gap-3 self-start sm:self-auto" aria-label="Case study navigation">
+          <button
+            type="button"
+            onClick={() => moveByCard(-1)}
+            aria-label="Previous case study"
+            className="flex size-11 items-center justify-center rounded-full border border-white/35 text-white transition-all duration-300 hover:border-[#ff4d00] hover:bg-[#ff4d00] active:scale-95 sm:size-12"
+          >
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+          <button
+            type="button"
+            onClick={() => moveByCard(1)}
+            aria-label="Next case study"
+            className="flex size-11 items-center justify-center rounded-full border border-white/35 text-white transition-all duration-300 hover:border-[#ff4d00] hover:bg-[#ff4d00] active:scale-95 sm:size-12"
+          >
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M9 6L15 12L9 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+        </div>
       </div>
 
       {/* Infinite rail — tripled so the loop is always seamless */}
       <div
-        className="cursor-grab active:cursor-grabbing select-none"
-        onMouseEnter={() => { pausedRef.current = true; }}
-        onMouseLeave={() => { pausedRef.current = false; }}
+        className="relative cursor-grab select-none active:cursor-grabbing"
+        onMouseEnter={() => { hoverPausedRef.current = true; }}
+        onMouseLeave={() => { hoverPausedRef.current = false; }}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
@@ -531,7 +655,7 @@ function ProjectsSection() {
             <div
               key={i}
               ref={i === 0 ? firstCardRef : undefined}
-              className="relative h-[260px] sm:h-[380px] lg:h-[550px] w-[min(400px,78vw)] sm:w-[min(500px,70vw)] lg:w-[570px] shrink-0 rounded-[10px] overflow-hidden group"
+              className="relative h-[260px] w-[min(400px,78vw)] shrink-0 overflow-hidden rounded-[10px] sm:h-[380px] sm:w-[min(500px,70vw)] lg:h-[550px] lg:w-[777px] group"
             >
               <img
                 src={p.img}
@@ -540,12 +664,13 @@ function ProjectsSection() {
                 draggable={false}
               />
               <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50 rounded-[10px]" />
-              <p className="absolute bottom-5 left-1/2 -translate-x-1/2 text-white font-semibold text-[18px] sm:text-[22px] lg:text-[28px] whitespace-nowrap">
+              <p className="absolute bottom-5 left-5 right-5 text-left text-[22px] font-medium leading-tight text-white sm:bottom-7 sm:left-7 sm:right-7 sm:text-[28px] lg:bottom-8 lg:left-8 lg:right-8 lg:text-[36px]">
                 {p.title}
               </p>
             </div>
           ))}
         </div>
+
       </div>
     </section>
   );
@@ -597,14 +722,32 @@ const STEPS = [
 
 function ProcessSection() {
   const [active, setActive] = useState(0);
-  const [fading, setFading] = useState(false);
+  const [timerKey, setTimerKey] = useState(0);
+  const autoTimerRef = useRef<number | null>(null);
 
-  const change = (i: number) => {
-    if (i === active) return;
-    setFading(true);
-    setTimeout(() => { setActive(i); setFading(false); }, 220);
+  const change = (i: number, restartTimer = true) => {
+    if (restartTimer && autoTimerRef.current !== null) {
+      window.clearTimeout(autoTimerRef.current);
+      autoTimerRef.current = null;
+    }
+    if (i === active) {
+      if (restartTimer) setTimerKey((key) => key + 1);
+      return;
+    }
+    setActive(i);
+    if (restartTimer) setTimerKey((key) => key + 1);
   };
 
+  useEffect(() => {
+    autoTimerRef.current = window.setTimeout(() => {
+      autoTimerRef.current = null;
+      change((active + 1) % STEPS.length, false);
+    }, 10000);
+
+    return () => {
+      if (autoTimerRef.current !== null) window.clearTimeout(autoTimerRef.current);
+    };
+  }, [active, timerKey]);
 
   return (
     <section className="bg-white py-14 sm:py-24 px-[clamp(24px,8vw,120px)]">
@@ -625,11 +768,17 @@ function ProcessSection() {
       <div className="flex flex-col lg:flex-row gap-6 lg:h-[405px]">
         {/* Image panel */}
         <div className="relative rounded-[20px] overflow-hidden lg:w-[663px] h-[220px] sm:h-[300px] lg:h-auto shrink-0">
-          <img
-            src={STEPS[active].img}
-            alt={STEPS[active].title}
-            className={`absolute inset-0 size-full object-cover transition-opacity duration-220 ${fading ? "opacity-0" : "opacity-100"}`}
-          />
+          {STEPS.map((step, i) => (
+            <img
+              key={step.title}
+              src={step.img}
+              alt={i === active ? step.title : ""}
+              aria-hidden={i !== active}
+              className={`absolute inset-0 size-full object-cover transition-[opacity,transform] duration-700 ease-in-out ${
+                i === active ? "scale-100 opacity-100" : "scale-[1.025] opacity-0"
+              }`}
+            />
+          ))}
         </div>
 
         {/* Accordion with inline process line */}
@@ -641,23 +790,30 @@ function ProcessSection() {
                 {/* Dot */}
                 <button
                   onClick={() => change(i)}
-                  className={`size-8 sm:size-9 rounded-full border-2 flex items-center justify-center font-semibold text-[13px] sm:text-[14px] shrink-0 transition-all duration-300 ${
+                  aria-label={`Show process step ${i + 1}: ${step.title}`}
+                  className={`relative size-8 sm:size-9 rounded-full border-2 flex items-center justify-center font-semibold text-[13px] sm:text-[14px] shrink-0 transition-all duration-500 ease-out ${
                     i === active
-                      ? "bg-[#ff4d00] border-[#ff4d00] text-white"
+                      ? "scale-105 bg-[#ff4d00] border-[#ff4d00] text-white shadow-[0_4px_16px_rgba(255,77,0,0.28)]"
                       : "bg-white border-[#e0e0e0] text-black/40 hover:border-[#ff4d00]/50"
                   }`}
                 >
                   {i + 1}
                 </button>
                 {/* Connector line */}
-                {i < STEPS.length - 1 && (
-                  <div className="w-[2px] flex-1 my-1.5 rounded-full bg-[#e8e8e8] relative overflow-hidden min-h-[20px]">
+                <div
+                  className={`w-[3px] flex-1 my-1.5 rounded-full relative overflow-hidden min-h-[20px] ${
+                    i === STEPS.length - 1 ? "bg-gradient-to-b from-[#e8e8e8] to-transparent" : "bg-[#e8e8e8]"
+                  }`}
+                >
+                  {i <= active && (
                     <div
-                      className="absolute top-0 left-0 w-full bg-[#ff4d00] rounded-full transition-all duration-400"
-                      style={{ height: i < active ? "100%" : "0%" }}
+                      key={i === active ? `${active}-${timerKey}` : i}
+                      className={`absolute top-0 left-0 w-full rounded-full bg-gradient-to-b from-[#ff4d00] to-[#ff7a3d] ${
+                        i === active ? "process-line-progress" : "h-full"
+                      }`}
                     />
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
 
               {/* Content */}
@@ -666,17 +822,17 @@ function ProcessSection() {
                 className="text-left group pb-4 sm:pb-6 flex-1"
               >
                 <p
-                  className={`font-medium text-[17px] sm:text-[21px] lg:text-[23px] leading-[1.3] mb-2 transition-colors ${
+                  className={`font-medium text-[17px] sm:text-[21px] lg:text-[23px] leading-[1.3] mb-2 transition-colors duration-500 ${
                     i === active ? "text-[#ff4d00]" : "text-black/60 group-hover:text-black/80"
                   }`}
                 >
                   {step.title}
                 </p>
                 <div
-                  className="overflow-hidden transition-all duration-300"
-                  style={{ maxHeight: i === active ? "250px" : "0px", opacity: i === active ? 1 : 0 }}
+                  className="grid transition-[grid-template-rows,opacity] duration-700 ease-in-out"
+                  style={{ gridTemplateRows: i === active ? "1fr" : "0fr", opacity: i === active ? 1 : 0 }}
                 >
-                  <div className="text-[#383838] text-[14px] sm:text-[16px] leading-[24px] sm:leading-[26px]">
+                  <div className="min-h-0 overflow-hidden text-[#383838] text-[14px] sm:text-[16px] leading-[24px] sm:leading-[26px]">
                     {step.lines.map((line, j) => (
                       <p key={j}>{line}</p>
                     ))}
@@ -697,21 +853,21 @@ type FormState = { name: string; email: string; phone: string; service: string; 
 const INFO = [
   {
     label: "OFFICE ADDRESS",
-    value: "12th Floor, Techno Park, Whitefield, Bangalore — 560066",
+    value: "119-120, Shivji Market, Plot 8 & 9, Sector -19D, Vashi, Navi Mumbai-400 703",
     icon: (
       <path d="M14.167 2.833H2.833A1.417 1.417 0 001.417 4.25v8.5c0 .783.633 1.417 1.416 1.417h11.334c.782 0 1.416-.634 1.416-1.417V4.25c0-.782-.634-1.417-1.416-1.417Z M1.417 4.958l7.083 4.584 7.083-4.584" stroke="#1B3A5C" strokeWidth="1.417" strokeLinecap="round" strokeLinejoin="round" />
     ),
   },
   {
     label: "PHONE",
-    value: "+91 80 4567 8900",
+    value: "+91 7208865757 / 9326667659",
     icon: (
       <path d="M15.583 11.985v2.125a1.417 1.417 0 01-1.541 1.417 14.008 14.008 0 01-6.108-2.17 13.801 13.801 0 01-4.25-4.25A14.008 14.008 0 011.517 2.99 1.417 1.417 0 012.929 1.417H5.054a1.417 1.417 0 011.417 1.218c.09.68.255 1.347.495 1.988a1.417 1.417 0 01-.319 1.496l-.938.938a11.334 11.334 0 004.25 4.25l.938-.938a1.417 1.417 0 011.496-.319c.641.24 1.308.405 1.988.496a1.417 1.417 0 011.202 1.439Z" stroke="#1B3A5C" strokeWidth="1.417" strokeLinecap="round" strokeLinejoin="round" />
     ),
   },
   {
     label: "EMAIL",
-    value: "hello@structura-eng.com",
+    value: "structeasy@gmail.com",
     icon: (
       <path d="M14.167 2.833H2.833A1.417 1.417 0 001.417 4.25v8.5c0 .783.633 1.417 1.416 1.417h11.334c.782 0 1.416-.634 1.416-1.417V4.25c0-.782-.634-1.417-1.416-1.417Z M1.417 4.958l7.083 4.584 7.083-4.584" stroke="#1B3A5C" strokeWidth="1.417" strokeLinecap="round" strokeLinejoin="round" />
     ),
@@ -727,6 +883,7 @@ function ContactSection() {
     const e: Partial<FormState> = {};
     if (!form.name.trim()) e.name = "Required";
     if (!form.email.trim() || !/\S+@\S+\.\S+/.test(form.email)) e.email = "Valid email required";
+    if (!form.phone.trim()) e.phone = "Required";
     if (!form.privacy) e.privacy = true as any;
     setErrors(e);
     return Object.keys(e).length === 0;
@@ -742,7 +899,7 @@ function ContactSection() {
   const field = "w-full bg-[#f5f7fa] rounded px-5 py-3 text-[16px] text-[#414141] outline-none focus:ring-2 focus:ring-[#4a90d9]/30 transition-all";
 
   return (
-    <section id="contact" className="bg-[#f5f7fa] py-14 sm:py-24 px-[clamp(24px,8vw,120px)]">
+    <section id="contact" className="bg-[#ecf5ff] py-14 sm:py-24 px-[clamp(24px,8vw,120px)]">
       <div className="mb-10 text-center">
         <p className="text-[#ff4d00] text-[16px] font-medium uppercase mb-2.5">Contact Us</p>
         <h2 className="text-[clamp(28px,3.5vw,40px)] font-medium text-[#111827] tracking-[-0.9px]">
@@ -787,16 +944,26 @@ function ContactSection() {
             <>
               <div className="flex flex-col sm:flex-row gap-4">
                 <div className="flex-1">
-                  <input className={`${field} ${errors.name ? "ring-2 ring-red-400" : ""}`} placeholder="Full Name" value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} />
+                  <input required className={`${field} ${errors.name ? "ring-2 ring-red-400" : ""}`} placeholder="Full Name" value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} />
                   {errors.name && <p className="text-red-500 text-[12px] mt-1">{errors.name}</p>}
                 </div>
                 <div className="flex-1">
-                  <input type="email" className={`${field} ${errors.email ? "ring-2 ring-red-400" : ""}`} placeholder="Email Address" value={form.email} onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))} />
+                  <input required type="email" className={`${field} ${errors.email ? "ring-2 ring-red-400" : ""}`} placeholder="Email Address" value={form.email} onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))} />
                   {errors.email && <p className="text-red-500 text-[12px] mt-1">{errors.email}</p>}
                 </div>
               </div>
 
-              <input className={field} placeholder="Phone Number" value={form.phone} onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))} />
+              <div>
+                <input
+                  required
+                  type="tel"
+                  className={`${field} ${errors.phone ? "ring-2 ring-red-400" : ""}`}
+                  placeholder="Phone Number"
+                  value={form.phone}
+                  onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
+                />
+                {errors.phone && <p className="text-red-500 text-[12px] mt-1">{errors.phone}</p>}
+              </div>
 
               <div className="relative">
                 <select
@@ -829,12 +996,11 @@ function ContactSection() {
                 </span>
               </label>
 
-              <button
+              <RevealButton
+                label="Submit"
                 type="submit"
-                className="w-full sm:w-auto bg-[#ff4d00] text-white font-semibold text-[18px] px-8 py-4 rounded-[48px] sm:self-start hover:bg-[#e54400] active:scale-95 transition-all mt-4 sm:mt-6"
-              >
-                Submit
-              </button>
+                className="mt-4 w-full sm:mt-6 sm:w-auto sm:self-start"
+              />
             </>
           )}
         </form>
@@ -856,21 +1022,9 @@ function Footer() {
       <div className="flex flex-col lg:flex-row items-start justify-between gap-12 mb-14">
         {/* Brand */}
         <div className="max-w-[320px]">
-          <div className="flex items-center gap-2.5 mb-5">
-            <div className="bg-[#4a90d9] size-8 rounded-[6px] flex items-center justify-center">
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                <path d="M4.5 16.5V3c0-.83.67-1.5 1.5-1.5h6c.83 0 1.5.67 1.5 1.5v13.5H4.5Z" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M1.5 16.5h15" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
-                <path d="M7.5 4.5h3M7.5 7.5h3M7.5 10.5h3M7.5 13.5h3" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
-              </svg>
-            </div>
-            <div>
-              <p className="text-white font-semibold text-[15px] tracking-[-0.375px]">STRUCTURA</p>
-              <p className="text-[#4a90d9] text-[10px] tracking-[2px] uppercase">Engineering</p>
-            </div>
-          </div>
+          <BrandLogo className="mb-5 w-[210px]" />
           <p className="text-white/45 text-[13px] leading-[1.625] mb-6">
-            Premier structural engineering consultancy delivering precision-engineered solutions across residential, commercial, industrial, and infrastructure sectors.
+            STRUCTEASY is a professional RCC Structural Design &amp; Engineering Consultancy focused on delivering safe, efficient, and practical structural solutions for modern construction projects.
           </p>
           <div className="flex gap-3">
             {[
