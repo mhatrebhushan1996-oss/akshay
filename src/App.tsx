@@ -384,7 +384,7 @@ function ServiceSwipeStack() {
   return (
     <div className="flex flex-col items-center gap-5">
       {/* Stack area */}
-      <div className="relative w-full h-[300px] select-none">
+      <div className="relative h-[300px] w-full touch-pan-y select-none">
         {order.map((cardIdx, stackPos) => {
           const isTop = stackPos === order.length - 1;
           const depth = order.length - 1 - stackPos; // 0 = top, 1 = second, …
@@ -473,7 +473,7 @@ function ServiceSwipeStack() {
 
 function ServicesSection() {
   return (
-    <section id="services" className="py-14 sm:py-24 px-[clamp(24px,8vw,120px)] bg-white">
+    <section id="services" className="overflow-hidden bg-white px-[clamp(24px,8vw,120px)] py-14 sm:py-24">
       {/* Header */}
       <div className="scroll-reveal flex flex-col lg:flex-row lg:items-end gap-8 lg:gap-12 mb-10 sm:mb-14">
         <div className="lg:w-[518px] shrink-0">
