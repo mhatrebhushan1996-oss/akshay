@@ -7,7 +7,7 @@ import imgProcess1 from "../imports/process-step-1.png";
 import imgProcess2 from "../imports/process-step-2.png";
 import imgProcess3 from "../imports/process-step-3.png";
 import imgProcess4 from "../imports/process-step-4.png";
-import imgRCC from "../imports/service-rcc-design.png";
+import imgRCC from "../imports/service-rcc-design.jpg";
 import imgSteel from "../imports/service-steel-design.png";
 import imgAudit from "../imports/service-structural-audit.png";
 import imgValuation from "../imports/service-property-valuation.png";
@@ -344,7 +344,9 @@ function ServiceSwipeStack() {
   // `order` holds indices from bottom to top — last item is the top card
   const [order, setOrder] = useState(() => ALL_SERVICES.map((_, i) => i));
   const [dragX, setDragX] = useState(0);
+  const [dragging, setDragging] = useState(false);
   const [flying, setFlying] = useState<"left" | "right" | null>(null);
+  const [activeArrow, setActiveArrow] = useState<"left" | "right" | null>(null);
   const dragRef = useRef({ active: false, startX: 0 });
 
   const topIdx = order[order.length - 1];
@@ -365,6 +367,7 @@ function ServiceSwipeStack() {
 
   const onPointerDown = (e: React.PointerEvent) => {
     dragRef.current = { active: true, startX: e.clientX };
+    setDragging(true);
     (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
   };
   const onPointerMove = (e: React.PointerEvent) => {
@@ -374,12 +377,22 @@ function ServiceSwipeStack() {
   const onPointerUp = () => {
     if (!dragRef.current.active) return;
     dragRef.current.active = false;
+    setDragging(false);
     if (Math.abs(dragX) > 72) dismiss(dragX > 0 ? "right" : "left");
     else setDragX(0);
   };
 
+  const clickArrow = (dir: "left" | "right") => {
+    if (flying) return;
+    setDragging(false);
+    setActiveArrow(dir);
+    window.setTimeout(() => setActiveArrow(null), 360);
+    dismiss(dir);
+  };
+
   // Which number card is currently on top (1-based, for the counter)
   const topPosition = ALL_SERVICES.findIndex((_, i) => i === topIdx);
+  const dragProgress = Math.min(Math.abs(dragX) / 180, 1);
 
   return (
     <div className="flex flex-col items-center gap-5">
@@ -402,16 +415,22 @@ function ServiceSwipeStack() {
               ? flying === "right" ? 18 : -18
               : dragX * 0.07;
             style = {
-              transform: `translateX(${tx}px) rotate(${rotate}deg)`,
-              transition: flying ? "transform 0.32s ease" : "none",
+              transform: `translateX(${tx}px) rotate(${rotate}deg) scale(${1 - dragProgress * 0.035})`,
+              opacity: 1 - dragProgress * 0.12,
+              transition: dragging
+                ? "none"
+                : "transform 0.38s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease",
               zIndex: 10,
               cursor: "grab",
+              willChange: "transform, opacity",
             };
           } else {
+            const liftProgress = depth === 1 ? dragProgress : 0;
             style = {
-              transform: `scale(${scale}) translateY(${translateY}px)`,
-              transition: "transform 0.3s ease",
+              transform: `scale(${scale + liftProgress * 0.05}) translateY(${translateY - liftProgress * 14}px)`,
+              transition: dragging ? "none" : "transform 0.38s cubic-bezier(0.22, 1, 0.36, 1)",
               zIndex: 10 - depth,
+              willChange: "transform",
             };
           }
 
@@ -428,15 +447,34 @@ function ServiceSwipeStack() {
                 img={ALL_SERVICES[cardIdx].img}
                 title={ALL_SERVICES[cardIdx].title}
               />
-              {/* Swipe hint arrows on top card */}
-              {isTop && !flying && Math.abs(dragX) < 10 && (
-                <div className="absolute inset-x-0 bottom-14 flex justify-between px-5 pointer-events-none opacity-50">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                    <path d="M15 18L9 12L15 6" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                    <path d="M9 6L15 12L9 18" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
+              {/* Clickable swipe arrows on the top card */}
+              {isTop && Math.abs(dragX) < 10 && (
+                <div className="pointer-events-none absolute inset-x-0 bottom-14 z-20 flex justify-between px-5">
+                  {(["left", "right"] as const).map((dir) => (
+                    <button
+                      key={dir}
+                      type="button"
+                      aria-label={`${dir === "left" ? "Previous" : "Next"} service`}
+                      onPointerDown={(event) => event.stopPropagation()}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        clickArrow(dir);
+                      }}
+                      className={`service-swipe-arrow pointer-events-auto flex size-10 items-center justify-center rounded-full border border-white/55 bg-[#0f1e30]/45 text-white backdrop-blur-sm ${
+                        activeArrow === dir ? `service-swipe-arrow--${dir}` : ""
+                      }`}
+                    >
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path
+                          d={dir === "left" ? "M15 18L9 12L15 6" : "M9 6L15 12L9 18"}
+                          stroke="currentColor"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </button>
+                  ))}
                 </div>
               )}
               {/* Swipe direction tint */}
@@ -700,43 +738,43 @@ function ProjectsSection() {
 // ─── ENGINEERING PROCESS ───────────────────────────────────────────────────
 const STEPS = [
   {
-    title: "Initial Consultation",
+    title: "DISCOVER",
     img: imgProcess1,
     lines: [
-      "A focused consulting approach to align engineering strategies with client objectives.",
-      "• Define structural requirements and project scope",
-      "• Conduct feasibility and planning studies",
-      "• Develop and finalize construction drawings",
+      "• Understand project requirements",
+      "• Review architectural drawings",
+      "• Collect site & soil information",
+      "• Define client objectives",
     ],
   },
   {
-    title: "Design & Planning",
+    title: "ANALYZE",
     img: imgProcess2,
     lines: [
-      "Detailed design process translating concepts into precise structural plans.",
-      "• Structural system selection and optimization",
-      "• Load analysis and safety factor assessment",
-      "• Coordination with architectural and MEP teams",
+      "• Develop structural system",
+      "• Calculate structural loads",
+      "• Perform structural analysis",
+      "• Optimize the design",
     ],
   },
   {
-    title: "Analysis & Design",
+    title: "DESIGN & DETAIL",
     img: imgProcess3,
     lines: [
-      "Rigorous computational analysis ensuring structural integrity and code compliance.",
-      "• Finite element analysis and modeling",
-      "• Seismic and wind load calculations",
-      "• Material optimization and cost efficiency",
+      "• Design slabs, beams & columns",
+      "• Design foundations & staircases",
+      "• Prepare reinforcement detailing",
+      "• Create structural drawings",
     ],
   },
   {
-    title: "Drawing & Delivery",
+    title: "DELIVER & SUPPORT",
     img: imgProcess4,
     lines: [
-      "Comprehensive documentation package ready for construction and regulatory approval.",
-      "• Detailed construction drawings and specifications",
-      "• BOQ and material take-offs",
-      "• Review meetings and client sign-off",
+      "• Deliver construction-ready drawings",
+      "• Provide technical consultancy",
+      "• Review structural requirements",
+      "• Resolve site-related queries",
     ],
   },
 ];

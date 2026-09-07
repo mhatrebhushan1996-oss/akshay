@@ -70,6 +70,44 @@ section[id] {
   animation-delay: 820ms;
 }
 
+@keyframes service-arrow-left {
+  0% { transform: translateX(0) scale(1); }
+  45% { transform: translateX(-7px) scale(0.9); }
+  100% { transform: translateX(0) scale(1); }
+}
+
+@keyframes service-arrow-right {
+  0% { transform: translateX(0) scale(1); }
+  45% { transform: translateX(7px) scale(0.9); }
+  100% { transform: translateX(0) scale(1); }
+}
+
+.service-swipe-arrow {
+  transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    transform 0.25s ease;
+}
+
+.service-swipe-arrow:hover,
+.service-swipe-arrow:focus-visible {
+  background-color: #ff4d00;
+  border-color: #ff4d00;
+}
+
+.service-swipe-arrow:focus-visible {
+  outline: 3px solid rgba(255, 255, 255, 0.55);
+  outline-offset: 2px;
+}
+
+.service-swipe-arrow--left {
+  animation: service-arrow-left 0.34s ease-out;
+}
+
+.service-swipe-arrow--right {
+  animation: service-arrow-right 0.34s ease-out;
+}
+
 @keyframes marquee {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
@@ -92,7 +130,9 @@ section[id] {
 
   .hero-split-letter,
   .hero-split-divider,
-  .hero-split-divider--second {
+  .hero-split-divider--second,
+  .service-swipe-arrow--left,
+  .service-swipe-arrow--right {
     opacity: 1;
     filter: none;
     transform: none;
