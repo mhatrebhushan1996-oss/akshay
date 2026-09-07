@@ -41,6 +41,22 @@ function BrandLogo({ className = "" }: { className?: string }) {
   );
 }
 
+function AnimatedHeroWord({ word, delay }: { word: string; delay: number }) {
+  return (
+    <span className="hero-split-word" aria-hidden="true">
+      {Array.from(word).map((letter, index) => (
+        <span
+          key={`${letter}-${index}`}
+          className="hero-split-letter"
+          style={{ animationDelay: `${delay + index * 55}ms` }}
+        >
+          {letter}
+        </span>
+      ))}
+    </span>
+  );
+}
+
 type RevealButtonProps = {
   label: string;
   onClick?: () => void;
@@ -109,7 +125,7 @@ function Navbar() {
       }`}
     >
       <div
-        className={`flex items-center justify-between pl-4 pr-2 h-[54px] rounded-[56px] border border-white/50 backdrop-blur-[14px] transition-colors duration-300 ${
+        className={`flex items-center justify-between py-2 pl-6 pr-2 rounded-[56px] border border-white/50 backdrop-blur-[14px] transition-colors duration-300 ${
           scrolled ? "bg-[#0f1e30]/85" : "bg-white/10"
         }`}
       >
@@ -203,12 +219,15 @@ function HeroSection() {
 
       <div className="relative z-10 flex min-h-[640px] items-end justify-center px-5 pb-14 sm:min-h-[730px] sm:px-8 sm:pb-20">
         <div className="flex w-full max-w-[1000px] flex-col items-center text-center">
-          <h1 className="flex items-center justify-center text-[clamp(34px,5.2vw,64px)] font-bold leading-none tracking-[-0.035em] text-white">
-            <span className="px-2.5 sm:px-5">Define</span>
-            <span className="h-[0.82em] w-px bg-white/80" aria-hidden="true" />
-            <span className="px-2.5 sm:px-5">Design</span>
-            <span className="h-[0.82em] w-px bg-white/80" aria-hidden="true" />
-            <span className="px-2.5 sm:px-5">Deliver</span>
+          <h1
+            className="flex items-center justify-center text-[clamp(34px,5.2vw,64px)] font-bold leading-none tracking-[-0.035em] text-white"
+            aria-label="Define, Design, Deliver"
+          >
+            <span className="px-2.5 sm:px-5"><AnimatedHeroWord word="Define" delay={180} /></span>
+            <span className="hero-split-divider h-[0.82em] w-px bg-white/80" aria-hidden="true" />
+            <span className="px-2.5 sm:px-5"><AnimatedHeroWord word="Design" delay={520} /></span>
+            <span className="hero-split-divider hero-split-divider--second h-[0.82em] w-px bg-white/80" aria-hidden="true" />
+            <span className="px-2.5 sm:px-5"><AnimatedHeroWord word="Deliver" delay={900} /></span>
           </h1>
         </div>
       </div>
@@ -233,7 +252,7 @@ function LogoStrip() {
   );
 
   return (
-    <div className="bg-[#ecf5ff] h-[110px] sm:h-[150px] overflow-hidden flex items-center">
+    <div className="scroll-reveal bg-[#ecf5ff] h-[110px] sm:h-[150px] overflow-hidden flex items-center" data-reveal="fade">
       <div
         className="flex items-center whitespace-nowrap"
         style={{ animation: "marquee 28s linear infinite", width: "max-content" }}
@@ -275,7 +294,7 @@ function AboutSection() {
           className="size-full object-cover object-bottom sm:object-contain"
         />
       </div>
-      <div className="relative z-10 flex flex-col items-center gap-14 px-8 text-center border-0 border-transparent">
+      <div className="scroll-reveal relative z-10 flex flex-col items-center gap-14 px-8 text-center border-0 border-transparent">
         <div className="max-w-[1090px]">
           <p className="text-[#ff4d00] text-[16px] font-medium uppercase tracking-wide mb-4">Who We Are</p>
           <p className="text-[#0f1e30] text-[clamp(28px,3.5vw,40px)] font-medium leading-[1.25]">
@@ -456,7 +475,7 @@ function ServicesSection() {
   return (
     <section id="services" className="py-14 sm:py-24 px-[clamp(24px,8vw,120px)] bg-white">
       {/* Header */}
-      <div className="flex flex-col lg:flex-row lg:items-end gap-8 lg:gap-12 mb-10 sm:mb-14">
+      <div className="scroll-reveal flex flex-col lg:flex-row lg:items-end gap-8 lg:gap-12 mb-10 sm:mb-14">
         <div className="lg:w-[518px] shrink-0">
           <p className="text-[#ff4d00] text-[16px] font-medium uppercase mb-2.5">Services</p>
           <h2 className="text-[clamp(28px,3.5vw,40px)] font-medium text-[#0f1e30] tracking-[-0.8px] leading-normal">
@@ -469,13 +488,14 @@ function ServicesSection() {
       </div>
 
       {/* ── Mobile: swipe stack ── */}
-      <div className="sm:hidden">
+      <div className="scroll-reveal reveal-delay-1 sm:hidden" data-reveal="scale">
         <ServiceSwipeStack />
       </div>
 
       {/* ── Tablet+: reference-style bento grid ── */}
       <div
-        className="hidden grid-cols-[minmax(0,1fr)_minmax(0,2fr)] gap-4 sm:grid lg:gap-5"
+        className="scroll-reveal reveal-delay-1 hidden grid-cols-[minmax(0,1fr)_minmax(0,2fr)] gap-4 sm:grid lg:gap-5"
+        data-reveal="scale"
         style={{ aspectRatio: "2.15 / 1" }}
       >
         <div className="min-h-0 min-w-0">
@@ -609,7 +629,7 @@ function ProjectsSection() {
   return (
     <section id="projects" className="bg-[#0f1e30] py-12 sm:py-16 overflow-hidden">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 px-[clamp(24px,8vw,120px)] mb-10 sm:mb-14">
+      <div className="scroll-reveal flex flex-col sm:flex-row sm:items-end justify-between gap-6 px-[clamp(24px,8vw,120px)] mb-10 sm:mb-14">
         <div>
           <p className="text-[#ff4d00] text-[16px] font-medium uppercase mb-2.5">Featured Projects</p>
           <h2 className="text-[clamp(28px,3.5vw,40px)] font-medium text-white tracking-[-0.8px] leading-[1.25]">
@@ -642,7 +662,8 @@ function ProjectsSection() {
 
       {/* Infinite rail — tripled so the loop is always seamless */}
       <div
-        className="relative cursor-grab select-none active:cursor-grabbing"
+        className="scroll-reveal reveal-delay-1 relative cursor-grab select-none active:cursor-grabbing"
+        data-reveal="right"
         onMouseEnter={() => { hoverPausedRef.current = true; }}
         onMouseLeave={() => { hoverPausedRef.current = false; }}
         onPointerDown={onPointerDown}
@@ -752,7 +773,7 @@ function ProcessSection() {
   return (
     <section className="bg-white py-14 sm:py-24 px-[clamp(24px,8vw,120px)]">
       {/* Header */}
-      <div className="flex flex-col lg:flex-row lg:items-end gap-8 lg:gap-12 mb-16">
+      <div className="scroll-reveal flex flex-col lg:flex-row lg:items-end gap-8 lg:gap-12 mb-16">
         <div className="lg:w-[518px] shrink-0">
           <p className="text-[#ff4d00] text-[16px] font-medium uppercase mb-2.5">Our Process</p>
           <h2 className="text-[clamp(28px,3.5vw,40px)] font-medium text-[#0f1e30] tracking-[-0.8px] leading-[1.225]">
@@ -765,7 +786,7 @@ function ProcessSection() {
       </div>
 
       {/* Content */}
-      <div className="flex flex-col lg:flex-row gap-6 lg:h-[405px]">
+      <div className="scroll-reveal reveal-delay-1 flex flex-col lg:flex-row gap-6 lg:h-[405px]" data-reveal="scale">
         {/* Image panel */}
         <div className="relative rounded-[20px] overflow-hidden lg:w-[663px] h-[220px] sm:h-[300px] lg:h-auto shrink-0">
           {STEPS.map((step, i) => (
@@ -900,7 +921,7 @@ function ContactSection() {
 
   return (
     <section id="contact" className="bg-[#ecf5ff] py-14 sm:py-24 px-[clamp(24px,8vw,120px)]">
-      <div className="mb-10 text-center">
+      <div className="scroll-reveal mb-10 text-center">
         <p className="text-[#ff4d00] text-[16px] font-medium uppercase mb-2.5">Contact Us</p>
         <h2 className="text-[clamp(28px,3.5vw,40px)] font-medium text-[#111827] tracking-[-0.9px]">
           {"Let's Build Something "}<span className="text-[#4a90d9]">Extraordinary</span>
@@ -909,7 +930,7 @@ function ContactSection() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
         {/* Info */}
-        <div className="flex flex-col gap-12">
+        <div className="scroll-reveal flex flex-col gap-12" data-reveal="left">
           <p className="text-[#414141] text-[20px] leading-[1.4]">
             Ready to discuss your project? Our team of structural engineers is here to provide expert consultation, detailed proposals, and technical support from day one.
           </p>
@@ -929,7 +950,7 @@ function ContactSection() {
         </div>
 
         {/* Form */}
-        <form onSubmit={submit} noValidate className="bg-white rounded-[10px] p-5 sm:p-10 flex flex-col gap-4">
+        <form onSubmit={submit} noValidate className="scroll-reveal reveal-delay-1 bg-white rounded-[10px] p-5 sm:p-10 flex flex-col gap-4" data-reveal="right">
           {sent ? (
             <div className="flex flex-col items-center justify-center py-16 gap-4 text-center">
               <div className="size-16 rounded-full bg-green-100 flex items-center justify-center">
@@ -1019,7 +1040,7 @@ const FOOTER_LINKS: Record<string, string[]> = {
 function Footer() {
   return (
     <footer className="bg-[#0f1e30] pt-16 px-[clamp(24px,8vw,120px)]">
-      <div className="flex flex-col lg:flex-row items-start justify-between gap-12 mb-14">
+      <div className="scroll-reveal flex flex-col lg:flex-row items-start justify-between gap-12 mb-14">
         {/* Brand */}
         <div className="max-w-[320px]">
           <BrandLogo className="mb-5 w-[210px]" />
@@ -1105,6 +1126,30 @@ function ScrollToTop() {
 
 // ─── APP ───────────────────────────────────────────────────────────────────
 export default function App() {
+  useEffect(() => {
+    const elements = Array.from(document.querySelectorAll<HTMLElement>(".scroll-reveal"));
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (reduceMotion || !("IntersectionObserver" in window)) {
+      elements.forEach((element) => element.classList.add("is-visible"));
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        });
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
+    );
+
+    elements.forEach((element) => observer.observe(element));
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div className="bg-white" style={{ fontFamily: "'Inter', sans-serif" }}>
       <Navbar />
