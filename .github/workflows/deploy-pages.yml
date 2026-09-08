@@ -39,8 +39,6 @@ jobs:
 
       - name: Build
         run: npm run build
-        env:
-          FIGMA_PUBLIC_URL: /akshay
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
