@@ -1,7 +1,9 @@
 {
-  "description": "Create stunning designs effortlessly with intuitive tools tailored for designers and creatives, enhancing productivity and collaboration.",
+  "title": "Structeasy | Structural Engineering Consultants in Mumbai",
+  "description": "Structeasy is a structural engineering consultancy in Navi Mumbai offering RCC and steel design, structural audits, retrofitting, valuation, and BOQ services.",
+  "language": "en-IN",
   "robots": {
-    "index": false
+    "index": true
   },
   "accessibility": {
     "addBypassLinks": false,

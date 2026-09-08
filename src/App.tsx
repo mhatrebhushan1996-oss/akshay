@@ -130,25 +130,33 @@ function Navbar() {
         }`}
       >
         {/* Logo */}
-        <button
-          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        <a
+          href="#hero"
+          onClick={(event) => {
+            event.preventDefault();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
           className="flex shrink-0 items-center"
           aria-label="Structeasy — back to top"
         >
           <BrandLogo className="w-[132px] sm:w-[150px]" />
-        </button>
+        </a>
 
         {/* Desktop links */}
         <div className="hidden md:flex items-center gap-8">
           <div className="flex items-center gap-8">
             {nav.map(({ label, id }) => (
-              <button
+              <a
                 key={id}
-                onClick={() => scrollTo(id)}
+                href={`#${id}`}
+                onClick={(event) => {
+                  event.preventDefault();
+                  scrollTo(id);
+                }}
                 className="text-white font-semibold text-[14px] hover:text-[#ff4d00] transition-colors"
               >
                 {label}
-              </button>
+              </a>
             ))}
           </div>
           <RevealButton
@@ -179,13 +187,18 @@ function Navbar() {
       {menuOpen && (
         <div className="md:hidden mt-2 rounded-2xl bg-[#0f1e30]/95 backdrop-blur-[14px] border border-white/10 p-4 flex flex-col gap-3">
           {nav.map(({ label, id }) => (
-            <button
+            <a
               key={id}
-              onClick={() => { scrollTo(id); setMenuOpen(false); }}
+              href={`#${id}`}
+              onClick={(event) => {
+                event.preventDefault();
+                scrollTo(id);
+                setMenuOpen(false);
+              }}
               className="text-white font-semibold text-[15px] text-left px-2 py-1 hover:text-[#ff4d00] transition-colors"
             >
               {label}
-            </button>
+            </a>
           ))}
           <RevealButton
             label="Contact Us"
@@ -221,14 +234,17 @@ function HeroSection() {
         <div className="flex w-full max-w-[1000px] flex-col items-center text-center">
           <h1
             className="flex items-center justify-center text-[clamp(34px,5.2vw,64px)] font-bold leading-none tracking-[-0.035em] text-white"
-            aria-label="Define, Design, Deliver"
           >
+            <span className="sr-only">Structural Engineering Consultancy in Mumbai — </span>
             <span className="px-2.5 sm:px-5"><AnimatedHeroWord word="Define" delay={180} /></span>
             <span className="hero-split-divider h-[0.82em] w-px bg-white/80" aria-hidden="true" />
             <span className="px-2.5 sm:px-5"><AnimatedHeroWord word="Design" delay={520} /></span>
             <span className="hero-split-divider hero-split-divider--second h-[0.82em] w-px bg-white/80" aria-hidden="true" />
             <span className="px-2.5 sm:px-5"><AnimatedHeroWord word="Deliver" delay={900} /></span>
           </h1>
+          <p className="mt-5 max-w-[720px] text-[14px] leading-relaxed text-white/80 sm:text-[17px]">
+            Structural engineering consultancy for safe, efficient RCC and steel structures in Mumbai and across India.
+          </p>
         </div>
       </div>
     </section>
@@ -297,9 +313,9 @@ function AboutSection() {
       <div className="scroll-reveal relative z-10 flex flex-col items-center gap-14 px-8 text-center border-0 border-transparent">
         <div className="max-w-[1090px]">
           <p className="text-[#ff4d00] text-[16px] font-medium uppercase tracking-wide mb-4">Who We Are</p>
-          <p className="text-[#0f1e30] text-[clamp(28px,3.5vw,40px)] font-medium leading-[1.25]">
+          <h2 className="text-[#0f1e30] text-[clamp(28px,3.5vw,40px)] font-medium leading-[1.25]">
             Engineering strength. Delivering confidence. We partner with architects and developers to turn complex ideas into stable, buildable realities.
-          </p>
+          </h2>
         </div>
         <RevealButton
           label="Know more"
@@ -560,10 +576,10 @@ function ServicesSection() {
 // ─── PROJECTS ──────────────────────────────────────────────────────────────
 const PROJECTS = [
   { title: "Admin Building", img: imgProject1 },
-  { title: "Dianing Building", img: imgProject2 },
+  { title: "Dining Building", img: imgProject2 },
   { title: "Food Mall Building", img: imgProject3 },
   { title: "Hotel Complex Building", img: imgProject4 },
-  { title: "G+6 Residental Building", img: imgProject5 },
+  { title: "G+6 Residential Building", img: imgProject5 },
 ];
 
 function ProjectsSection() {
@@ -809,7 +825,7 @@ function ProcessSection() {
   }, [active, timerKey]);
 
   return (
-    <section className="bg-white py-14 sm:py-24 px-[clamp(24px,8vw,120px)]">
+    <section id="process" className="bg-white py-14 sm:py-24 px-[clamp(24px,8vw,120px)]">
       {/* Header */}
       <div className="scroll-reveal flex flex-col lg:flex-row lg:items-end gap-8 lg:gap-12 mb-16">
         <div className="lg:w-[518px] shrink-0">
@@ -980,7 +996,19 @@ function ContactSection() {
                 </div>
                 <div>
                   <p className="text-[#ff4d00] text-[10px] tracking-[1px] uppercase mb-1">{label}</p>
-                  <p className="text-[#0f1e30] text-[16px]">{value}</p>
+                  {label === "PHONE" ? (
+                    <p className="text-[#0f1e30] text-[16px]">
+                      <a className="hover:text-[#ff4d00] hover:underline" href="tel:+917208865757">+91 7208865757</a>
+                      {" / "}
+                      <a className="hover:text-[#ff4d00] hover:underline" href="tel:+919326667659">9326667659</a>
+                    </p>
+                  ) : label === "EMAIL" ? (
+                    <a className="text-[#0f1e30] text-[16px] hover:text-[#ff4d00] hover:underline" href="mailto:structeasy@gmail.com">
+                      {value}
+                    </a>
+                  ) : (
+                    <address className="text-[#0f1e30] text-[16px] not-italic">{value}</address>
+                  )}
                 </div>
               </div>
             ))}
@@ -1069,10 +1097,16 @@ function ContactSection() {
 }
 
 // ─── FOOTER ────────────────────────────────────────────────────────────────
-const FOOTER_LINKS: Record<string, string[]> = {
-  Company: ["About Us", "Our Team", "Careers", "News & Updates"],
-  Services: ["Structural Design", "RCC & Steel", "Peer Review", "Value Engineering", "Construction Drawings"],
-  Projects: ["Residential", "Commercial", "Industrial", "Infrastructure"],
+const FOOTER_LINKS: Record<string, { label: string; id: string }[]> = {
+  Company: [
+    { label: "About Us", id: "about" },
+    { label: "Contact Us", id: "contact" },
+  ],
+  Services: ALL_SERVICES.map(({ title }) => ({ label: title, id: "services" })),
+  Projects: [
+    { label: "Project Portfolio", id: "projects" },
+    { label: "Our Process", id: "process" },
+  ],
 };
 
 function Footer() {
@@ -1085,7 +1119,7 @@ function Footer() {
           <p className="text-white/45 text-[13px] leading-[1.625] mb-6">
             STRUCTEASY is a professional RCC Structural Design &amp; Engineering Consultancy focused on delivering safe, efficient, and practical structural solutions for modern construction projects.
           </p>
-          <div className="flex gap-3">
+          <div className="flex gap-3" aria-hidden="true">
             {[
               <path key="li" d="M10 5c.995 0 1.948.395 2.652 1.098A3.75 3.75 0 0113.75 8.75v4.375H11.25V8.75a1.25 1.25 0 00-2.5 0v4.375H6.25V8.75A3.75 3.75 0 0110 5ZM3.75 5.625H1.25v7.5h2.5v-7.5ZM2.5 3.75a1.25 1.25 0 100-2.5 1.25 1.25 0 000 2.5Z" />,
               <path key="tw" d="M13.75 2.5s-.438 1.313-1.25 2.125c1 6.25-5.875 10.813-11.25 7.25 1.375.063 2.75-.375 3.75-1.25C1.875 9.688.313 6 1.875 3.125 3.25 4.75 5.375 5.688 7.5 5.625 6.938 3 10 1.5 11.875 3.25c.688 0 1.875-.75 1.875-.75Z" />,
@@ -1094,11 +1128,11 @@ function Footer() {
                 <path key="ig2" d="M10.9375 4.0625h.0063" />
               </>,
             ].map((paths, i) => (
-              <a key={i} href="#" className="size-9 rounded-[6px] border border-white/10 flex items-center justify-center hover:border-white/30 hover:bg-white/5 transition-all">
+              <span key={i} className="size-9 rounded-[6px] border border-white/10 flex items-center justify-center">
                 <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="white" strokeOpacity="0.4" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round">
                   {paths}
                 </svg>
-              </a>
+              </span>
             ))}
           </div>
         </div>
@@ -1109,10 +1143,10 @@ function Footer() {
             <div key={cat}>
               <p className="text-white/35 text-[11px] font-medium tracking-[2.75px] uppercase mb-4">{cat}</p>
               <ul className="flex flex-col gap-2.5">
-                {links.map((link) => (
-                  <li key={link}>
-                    <a href="#" className="text-white/50 text-[13px] hover:text-white/80 transition-colors">
-                      {link}
+                {links.map(({ label, id }) => (
+                  <li key={label}>
+                    <a href={`#${id}`} className="text-white/50 text-[13px] hover:text-white/80 transition-colors">
+                      {label}
                     </a>
                   </li>
                 ))}
@@ -1124,13 +1158,13 @@ function Footer() {
 
       <div className="border-t border-white/[0.08] py-4 flex flex-col sm:flex-row items-center justify-between gap-3">
         <p className="text-white/25 text-[11px] tracking-[0.275px] text-center sm:text-left">
-          © 2025 STRUCTURA Engineering Consultancy Pvt. Ltd. All rights reserved.
+          © 2026 STRUCTEASY Engineering Consultancy. All rights reserved.
         </p>
         <div className="flex gap-6">
           {["Privacy Policy", "Terms of Service", "Cookie Policy"].map((l) => (
-            <a key={l} href="#" className="text-white/25 text-[11px] hover:text-white/50 transition-colors">
+            <span key={l} className="text-white/25 text-[11px]">
               {l}
-            </a>
+            </span>
           ))}
         </div>
       </div>
@@ -1191,13 +1225,15 @@ export default function App() {
   return (
     <div className="bg-white" style={{ fontFamily: "'Inter', sans-serif" }}>
       <Navbar />
-      <HeroSection />
-      <LogoStrip />
-      <AboutSection />
-      <ServicesSection />
-      <ProjectsSection />
-      <ProcessSection />
-      <ContactSection />
+      <main>
+        <HeroSection />
+        <LogoStrip />
+        <AboutSection />
+        <ServicesSection />
+        <ProjectsSection />
+        <ProcessSection />
+        <ContactSection />
+      </main>
       <Footer />
       <ScrollToTop />
     </div>
