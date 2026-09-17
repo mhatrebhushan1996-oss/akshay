@@ -358,7 +358,9 @@ function BentoCard({ img, title }: { img: string; title: string }) {
 function ServiceSwipeStack() {
   const total = ALL_SERVICES.length;
   // `order` holds indices from bottom to top — last item is the top card
-  const [order, setOrder] = useState(() => ALL_SERVICES.map((_, i) => i));
+  const [order, setOrder] = useState(() =>
+    ALL_SERVICES.map((_, i) => i).reverse(),
+  );
   const [dragX, setDragX] = useState(0);
   const [dragging, setDragging] = useState(false);
   const [flying, setFlying] = useState<"left" | "right" | null>(null);
@@ -367,13 +369,21 @@ function ServiceSwipeStack() {
 
   const topIdx = order[order.length - 1];
 
-  const dismiss = (dir: "left" | "right") => {
-    setFlying(dir);
+  const dismiss = (
+    flyDirection: "left" | "right",
+    sequenceDirection: "previous" | "next",
+  ) => {
+    setFlying(flyDirection);
     setTimeout(() => {
       setOrder((prev) => {
         const next = [...prev];
-        const top = next.pop()!;
-        next.unshift(top); // send to bottom of stack
+        if (sequenceDirection === "next") {
+          const top = next.pop()!;
+          next.unshift(top);
+        } else {
+          const bottom = next.shift()!;
+          next.push(bottom);
+        }
         return next;
       });
       setDragX(0);
@@ -394,7 +404,12 @@ function ServiceSwipeStack() {
     if (!dragRef.current.active) return;
     dragRef.current.active = false;
     setDragging(false);
-    if (Math.abs(dragX) > 72) dismiss(dragX > 0 ? "right" : "left");
+    if (Math.abs(dragX) > 72) {
+      dismiss(
+        dragX > 0 ? "right" : "left",
+        dragX > 0 ? "previous" : "next",
+      );
+    }
     else setDragX(0);
   };
 
@@ -403,7 +418,7 @@ function ServiceSwipeStack() {
     setDragging(false);
     setActiveArrow(dir);
     window.setTimeout(() => setActiveArrow(null), 360);
-    dismiss(dir);
+    dismiss(dir, dir === "left" ? "previous" : "next");
   };
 
   // Which number card is currently on top (1-based, for the counter)
